@@ -53,6 +53,12 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 		else
 			gpiod_set_value(led_dat->gpiod, level);
 	}
+	if (level) {
+		printk(KERN_INFO "nle led on");
+	}
+	else {
+		printk(KERN_INFO "nle led off");
+	}
 }
 
 static int gpio_led_set_blocking(struct led_classdev *led_cdev,
