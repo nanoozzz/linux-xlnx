@@ -54,7 +54,7 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 			gpiod_set_value(led_dat->gpiod, level);
 	}
 	if (level) {
-		printk(KERN_INFO "nle led on");
+		printk(KERN_INFO "nle led on called by %pS", __builtin_return_adress(0));
 	}
 	else {
 		printk(KERN_INFO "nle led off");
