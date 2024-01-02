@@ -89,7 +89,7 @@ static int create_gpio_led(const struct gpio_led *template,
 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
 	if (!led_dat->can_sleep){
 		led_dat->cdev.brightness_set = gpio_led_set;
-		printk(KERN_INFO "nle brightness triggered");
+		printk(KERN_INFO "nle point to hardware done");
 	}
 	else
 		led_dat->cdev.brightness_set_blocking = gpio_led_set_blocking;
@@ -121,10 +121,12 @@ static int create_gpio_led(const struct gpio_led *template,
 	if (template->name) {
 		led_dat->cdev.name = template->name;
 		ret = devm_led_classdev_register(parent, &led_dat->cdev);
+		printk(KERN_INFO "nle led name done");
 	} else {
 		init_data.fwnode = fwnode;
 		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
 						     &init_data);
+		printk(KERN_INFO "nle led name not done");
 	}
 
 	return ret;
