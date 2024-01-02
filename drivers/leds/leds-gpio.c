@@ -18,6 +18,7 @@
 #include <linux/slab.h>
 #include "leds.h"
 #include <linux/fwnode.h>
+#include <linux/gpio/desc.h>
 
 struct gpio_led_data {
 	struct led_classdev cdev;
@@ -256,7 +257,7 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 }
 
 /*add by NLe*/
-static int map_gpio_from_dt(const struct gpio_led *template,
+static int map_gpio_from_dt(struct fwnode_handle *fwnode,
                              struct gpio_led_data *led_dat,
                              struct device *dev)
 {
@@ -269,23 +270,29 @@ static int map_gpio_from_dt(const struct gpio_led *template,
             dev_err(dev, "Failed to read GPIO number from device tree\n");
             return -EINVAL;
         }
-	led_dat->gpiod = gpio_number;
-
+	// Obtain the GPIO descriptor for the GPIO number
+	led_dat->gpiod = gpio_to_desc(gpio_number);
+	if (!led_dat->gpiod) {
+    		dev_err(dev, "Failed to get GPIO descriptor for GPIO %u\n", gpio_number);
+   		return -EINVAL;
+	}
+	
+	unsigned int gpio_requested = desc_to_gpio(led_dat->gpiod);
         // Request and configure the GPIO based on the information from the device tree
         // Add your GPIO initialization code here
 	ret = gpio_request(led_dat->gpiod, "my_led_gpio");
         if (ret) {
-            dev_err(dev, "Failed to request GPIO %u\n", led_dat->gpiod);
+            dev_err(dev, "Failed to request GPIO %p\n",(void *)led_dat->gpiod);
             return ret;
         }
 
-        ret = gpio_direction_output(led_dat->gpio, 0);  // Assume initial state is off
+        ret = gpio_direction_output(led_dat->gpiod, 0);  // Assume initial state is off
         if (ret) {
-            dev_err(dev, "Failed to configure GPIO %u as output\n", led_dat->gpiod);
-            gpio_free(led_dat->gpio);
+            dev_err(dev, "Failed to configure GPIO %p as output\n", (void *)led_dat->gpiod);
+            gpio_free(led_dat->gpiod);
             return ret;
         }
-        pr_info("Mapped GPIO %u for LED %s\n", led_dat->gpiod, template->name);
+        pr_info("Mapped GPIO %p for LED %s\n", (void *)led_dat->gpiod, template->name);
     } else {
         pr_warn("GPIO information not found in device tree for LED %s\n", template->name);
     }
