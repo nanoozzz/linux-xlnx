@@ -87,9 +87,10 @@ static int create_gpio_led(const struct gpio_led *template,
 
 	led_dat->cdev.default_trigger = template->default_trigger;
 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
-	if (!led_dat->can_sleep)
+	if (!led_dat->can_sleep){
 		led_dat->cdev.brightness_set = gpio_led_set;
 		printk(KERN_INFO "nle brightness triggered");
+	}
 	else
 		led_dat->cdev.brightness_set_blocking = gpio_led_set_blocking;
 	led_dat->blinking = 0;
