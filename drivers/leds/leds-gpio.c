@@ -54,10 +54,10 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 			gpiod_set_value(led_dat->gpiod, level);
 	}
 	if (level) {
-		printk(KERN_INFO "nle led on called by %pS", __builtin_return_adress(0));
+		printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
 	}
 	else {
-		printk(KERN_INFO "nle led off");
+		printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
 	}
 }
 
@@ -89,6 +89,7 @@ static int create_gpio_led(const struct gpio_led *template,
 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
 	if (!led_dat->can_sleep)
 		led_dat->cdev.brightness_set = gpio_led_set;
+		printk(KERN_INFO "nle brightness triggered");
 	else
 		led_dat->cdev.brightness_set_blocking = gpio_led_set_blocking;
 	led_dat->blinking = 0;
