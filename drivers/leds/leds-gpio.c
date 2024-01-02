@@ -89,7 +89,7 @@ static int create_gpio_led(const struct gpio_led *template,
 {
 	struct led_init_data init_data = {};
 	int ret, state;
-
+	struct gpio_led_data *leds = led_dat - led_dat->cdev.index;
 	led_dat->cdev.default_trigger = template->default_trigger;
 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
 	if (!led_dat->can_sleep){
