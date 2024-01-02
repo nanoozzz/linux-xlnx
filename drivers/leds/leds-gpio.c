@@ -125,12 +125,14 @@ static int create_gpio_led(const struct gpio_led *template,
 
 	if (template->name) {
 		led_dat->cdev.name = template->name;
-		ret = devm_led_classdev_register(parent, &led_dat->cdev);
 	} else {
-		init_data.fwnode = fwnode;
-		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
-						     &init_data);
+		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-%d",
+			led_dat->cdev.index);
+		if (!led_dat->cdev.name)
+			return -ENOMEM;
 	}
+	ret = devm_led_classdev_register(parent, &led_dat->cdev);
+
 	if (ret == 0) {
 		// Set gpiod label to match the corresponding LED name.
 		gpiod_set_consumer_name(led_dat->gpiod, led_dat->cdev.name);
