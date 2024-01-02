@@ -261,28 +261,31 @@ static int map_gpio_from_dt(const struct gpio_led *template,
                              struct device *dev)
 {
     // Check if the gpio property is present in the device tree
-    if (fwnode_property_present(template->fwnode, "gpio")) {
-        // Read the GPIO number from the device tree
-        if (fwnode_property_read_u32(template->fwnode, "gpio", &led_dat->gpiod)) {
+    if (fwnode_property_present(fwnode, "gpio")) {
+	u32 gpio_number;
+	int ret;
+	// Read the GPIO number from the device tree
+        if (fwnode_property_read_u32(fwnode, "gpio", &gpio_number)) {
             dev_err(dev, "Failed to read GPIO number from device tree\n");
             return -EINVAL;
         }
+	led_dat->gpiod = gpio_number;
 
         // Request and configure the GPIO based on the information from the device tree
         // Add your GPIO initialization code here
-	int ret = gpio_request(led_dat->gpio, "my_led_gpio");
+	ret = gpio_request(led_dat->gpiod, "my_led_gpio");
         if (ret) {
-            dev_err(dev, "Failed to request GPIO %d\n", led_dat->gpio);
+            dev_err(dev, "Failed to request GPIO %u\n", led_dat->gpiod);
             return ret;
         }
 
         ret = gpio_direction_output(led_dat->gpio, 0);  // Assume initial state is off
         if (ret) {
-            dev_err(dev, "Failed to configure GPIO %d as output\n", led_dat->gpio);
+            dev_err(dev, "Failed to configure GPIO %u as output\n", led_dat->gpiod);
             gpio_free(led_dat->gpio);
             return ret;
         }
-        pr_info("Mapped GPIO %d for LED %s\n", led_dat->gpio, template->name);
+        pr_info("Mapped GPIO %u for LED %s\n", led_dat->gpiod, template->name);
     } else {
         pr_warn("GPIO information not found in device tree for LED %s\n", template->name);
     }
