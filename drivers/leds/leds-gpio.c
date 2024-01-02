@@ -56,11 +56,11 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 	printk(KERN_INFO "nle brightness value is %d", value);
 	if (value) {
 		printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
-		printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
+		//printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
 	}
 	else {
 		printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
-		printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
+		//printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
 	}
 }
 
@@ -212,16 +212,16 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 	int ret;
 
 	/*add by NLe*/
-	struct gpio_desc *ds44;
+	/*struct gpio_desc *ds44;
 	ds44 = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
-
+*/
 	/*
 	 * This means the LED does not come from the device tree
 	 * or ACPI, so let's try just getting it by index from the
 	 * device, this will hit the board file, if any and get
 	 * the GPIO from there.
 	 */
-	//gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOD_OUT_LOW);
+	gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOD_OUT_LOW);
 	if (!IS_ERR(gpiod)) {
 		gpiod_set_consumer_name(gpiod, template->name);
 		return gpiod;
@@ -282,6 +282,11 @@ static int gpio_led_probe(struct platform_device *pdev)
 					 template->gpio, template->name);
 				continue;
 			}
+			/*add by NLe*/
+			ret = map_gpio_from_dt(template, led_dat, &pdev->dev);
+           		if (ret < 0)
+                		return ret;
+			/*end*/
 
 			ret = create_gpio_led(template, led_dat,
 					      &pdev->dev, NULL,
@@ -299,6 +304,31 @@ static int gpio_led_probe(struct platform_device *pdev)
 
 	return 0;
 }
+
+/*add by NLe*/
+static int map_gpio_from_dt(const struct gpio_led *template,
+                             struct gpio_led_data *led_dat,
+                             struct device *dev)
+{
+    // Check if the gpio property is present in the device tree
+    if (fwnode_property_present(template->fwnode, "gpio")) {
+        // Read the GPIO number from the device tree
+        if (fwnode_property_read_u32(template->fwnode, "gpio", &led_dat->gpio)) {
+            dev_err(dev, "Failed to read GPIO number from device tree\n");
+            return -EINVAL;
+        }
+
+        // Request and configure the GPIO based on the information from the device tree
+        // Add your GPIO initialization code here
+
+        pr_info("Mapped GPIO %d for LED %s\n", led_dat->gpio, template->name);
+    } else {
+        pr_warn("GPIO information not found in device tree for LED %s\n", template->name);
+    }
+
+    return 0;
+}
+/*end*/
 
 static void gpio_led_shutdown(struct platform_device *pdev)
 {
