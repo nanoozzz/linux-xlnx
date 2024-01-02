@@ -56,11 +56,12 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 	printk(KERN_INFO "nle brightness value is %d", value);
 	if (value) {
 		printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
+		printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
 	}
 	else {
 		printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
+		printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
 	}
-	printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
 }
 
 static int gpio_led_set_blocking(struct led_classdev *led_cdev,
@@ -210,13 +211,17 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 	unsigned long flags = GPIOF_OUT_INIT_LOW;
 	int ret;
 
+	/*add by NLe*/
+	struct gpio_desc *led-ds44;
+	gpiod = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
+
 	/*
 	 * This means the LED does not come from the device tree
 	 * or ACPI, so let's try just getting it by index from the
 	 * device, this will hit the board file, if any and get
 	 * the GPIO from there.
 	 */
-	gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOD_OUT_LOW);
+	//gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOD_OUT_LOW);
 	if (!IS_ERR(gpiod)) {
 		gpiod_set_consumer_name(gpiod, template->name);
 		return gpiod;
