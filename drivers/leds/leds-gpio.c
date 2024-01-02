@@ -127,7 +127,7 @@ static int create_gpio_led(const struct gpio_led *template,
 		led_dat->cdev.name = template->name;
 	} else {
 		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-%d",
-			led_dat->cdev.index);
+			led_dat - priv->leds);
 		if (!led_dat->cdev.name)
 			return -ENOMEM;
 	}
