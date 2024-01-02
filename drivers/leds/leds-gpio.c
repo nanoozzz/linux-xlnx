@@ -126,12 +126,15 @@ static int create_gpio_led(const struct gpio_led *template,
 	if (template->name) {
 		led_dat->cdev.name = template->name;
 		ret = devm_led_classdev_register(parent, &led_dat->cdev);
-		printk(KERN_INFO "nle led name done");
 	} else {
 		init_data.fwnode = fwnode;
 		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
 						     &init_data);
-		printk(KERN_INFO "nle led name not done");
+	}
+	if (ret == 0) {
+		// Set gpiod label to match the corresponding LED name.
+		gpiod_set_consumer_name(led_dat->gpiod, led_dat->cdev.name);
+		printk(KERN_INFO "nle led get name done");
 	}
 
 	return ret;
@@ -217,6 +220,7 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 	/*struct gpio_desc *ds44;
 	ds44 = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
 */
+
 	/*
 	 * This means the LED does not come from the device tree
 	 * or ACPI, so let's try just getting it by index from the
@@ -255,8 +259,8 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 
 	return gpiod;
 }
-
-/*add by NLe*/
+/*
+add by NLe
 static int map_gpio_from_dt(struct fwnode_handle *fwnode,
                              struct gpio_led_data *led_dat,
                              struct device *dev)
@@ -299,8 +303,8 @@ static int map_gpio_from_dt(struct fwnode_handle *fwnode,
 
     return 0;
 }
-/*end*/
-
+end
+*/
 static int gpio_led_probe(struct platform_device *pdev)
 {
 	struct gpio_led_platform_data *pdata = dev_get_platdata(&pdev->dev);
@@ -329,11 +333,11 @@ static int gpio_led_probe(struct platform_device *pdev)
 					 template->gpio, template->name);
 				continue;
 			}
-			/*add by NLe*/
+			/*add by NLe
 			ret = map_gpio_from_dt(template, led_dat, &pdev->dev);
            		if (ret < 0)
                 		return ret;
-			/*end*/
+			end*/
 
 			ret = create_gpio_led(template, led_dat,
 					      &pdev->dev, NULL,
@@ -344,6 +348,7 @@ static int gpio_led_probe(struct platform_device *pdev)
 	} else {
 		priv = gpio_leds_create(pdev);
 		if (IS_ERR(priv))
+			
 			return PTR_ERR(priv);
 	}
 
