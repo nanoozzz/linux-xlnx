@@ -212,8 +212,8 @@ static struct gpio_desc *gpio_led_get_gpiod(struct device *dev, int idx,
 	int ret;
 
 	/*add by NLe*/
-	struct gpio_desc *led-ds44;
-	gpiod = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
+	struct gpio_desc *ds44;
+	ds44 = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
 
 	/*
 	 * This means the LED does not come from the device tree
