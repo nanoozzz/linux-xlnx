@@ -131,7 +131,6 @@ static int create_gpio_led(const struct gpio_led *template,
 		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
 						     &init_data);
 	}
-	ret = devm_led_classdev_register(parent, &led_dat->cdev);
 
 	//if (ret == 0) {
 		// Set gpiod label to match the corresponding LED name.
