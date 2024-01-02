@@ -18,7 +18,7 @@
 #include <linux/slab.h>
 #include "leds.h"
 #include <linux/fwnode.h>
-#include <linux/gpio/desc.h>
+//#include <linux/gpio/desc.h>
 
 struct gpio_led_data {
 	struct led_classdev cdev;
