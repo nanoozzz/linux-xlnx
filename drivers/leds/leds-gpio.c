@@ -44,7 +44,7 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 		level = 0;
 	else
 		level = 1;
-	if (value) {
+	if (level) {
                 printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
                 //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
         }
@@ -136,8 +136,8 @@ static int create_gpio_led(const struct gpio_led *template,
 		led_dat->cdev.name = template->name;
 		ret = devm_led_classdev_register(parent, &led_dat->cdev);
 	} else {
-		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-%d",
-			led_counter++);
+		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-DS%d",
+			36+led_counter++);
 		if (!led_dat->cdev.name)
 			return -ENOMEM;	
 		//init_data.fwnode = fwnode;
