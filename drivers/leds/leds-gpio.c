@@ -44,6 +44,14 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 		level = 0;
 	else
 		level = 1;
+	if (value) {
+                printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
+                //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        }
+        else {
+                printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
+                //printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        }
 
 	if (led_dat->blinking) {
 		led_dat->platform_gpio_blink_set(led_dat->gpiod, level,
@@ -56,14 +64,14 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 			gpiod_set_value(led_dat->gpiod, level);
 	}
 	//printk(KERN_INFO "nle brightness value is %d", value);
-	if (value) {
+	/*if (value) {
 		printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
 		//printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
 	}
 	else {
 		printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
 		//printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
-	}
+	}*/
 }
 
 static int gpio_led_set_blocking(struct led_classdev *led_cdev,
@@ -89,7 +97,8 @@ static int create_gpio_led(const struct gpio_led *template,
 {
 	struct led_init_data init_data = {};
 	int ret, state;
-	
+	static int led_counter = 0;
+
 	led_dat->cdev.default_trigger = template->default_trigger;
 	led_dat->can_sleep = gpiod_cansleep(led_dat->gpiod);
 	if (!led_dat->can_sleep){
@@ -127,10 +136,14 @@ static int create_gpio_led(const struct gpio_led *template,
 		led_dat->cdev.name = template->name;
 		ret = devm_led_classdev_register(parent, &led_dat->cdev);
 	} else {
-		led_dat->cdev.name = template->name;
-		init_data.fwnode = fwnode;
-		ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
-						     &init_data);
+		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-%d",
+			led_counter++);
+		if (!led_dat->cdev.name)
+			return -ENOMEM;	
+		//init_data.fwnode = fwnode;
+		//ret = devm_led_classdev_register_ext(parent, &led_dat->cdev,
+		//				     &init_data);
+		ret = devm_led_classdev_register(parent, &led_dat->cdev);
 	}
 
 	//if (ret == 0) {
