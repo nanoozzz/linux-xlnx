@@ -41,19 +41,20 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 	int level;
 
 
-	if (value) {
+	/*if (value) {
                 printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
                 //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
         }
         else {
                 printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
                 //printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
-        }
+        }*/
 
 	if (value == LED_OFF)
 		level = 0;
 	else
 		level = 1;
+
 	/*if (level) {
                 printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
                 //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
@@ -70,8 +71,19 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 	} else {
 		if (led_dat->can_sleep)
 			gpiod_set_value_cansleep(led_dat->gpiod, level);
-		else
+		else{
 			gpiod_set_value(led_dat->gpiod, level);
+			if (level) {
+                		printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
+				printk("\n");
+                		//printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        		}
+        		else {
+                		printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
+                		printk("\n");
+				//printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        		}
+		}
 	}
 	//printk(KERN_INFO "nle brightness value is %d", value);
 	/*if (value) {
