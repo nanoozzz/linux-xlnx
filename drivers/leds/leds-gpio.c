@@ -40,10 +40,7 @@ static void gpio_led_set(struct led_classdev *led_cdev,
 	struct gpio_led_data *led_dat = cdev_to_gpio_led_data(led_cdev);
 	int level;
 
-	if (value == LED_OFF)
-		level = 0;
-	else
-		level = 1;
+
 	if (level) {
                 printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
                 //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
@@ -52,6 +49,19 @@ static void gpio_led_set(struct led_classdev *led_cdev,
                 printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
                 //printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
         }
+
+	if (value == LED_OFF)
+		level = 0;
+	else
+		level = 1;
+	/*if (level) {
+                printk(KERN_INFO "nle led %s on", led_dat->cdev.name);
+                //printk(KERN_INFO "nle led gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        }
+        else {
+                printk(KERN_INFO "nle led %s off", led_dat->cdev.name);
+                //printk(KERN_INFO "nle gpio state is %d", gpiod_get_value(led_dat->gpiod));
+        }*/
 
 	if (led_dat->blinking) {
 		led_dat->platform_gpio_blink_set(led_dat->gpiod, level,
