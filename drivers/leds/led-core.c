@@ -44,8 +44,9 @@ static int __led_set_brightness(struct led_classdev *led_cdev, unsigned int valu
 	if (!led_cdev->brightness_set)
 		return -ENOTSUPP;
 
-	led_cdev->brightness_set(led_cdev, value);
 	printk(KERN_INFO "nle sysfs done %s value = %u",led_cdev->name, value);
+	led_cdev->brightness_set(led_cdev, value);
+//	printk(KERN_INFO "nle sysfs done %s value = %u",led_cdev->name, value);
 	return 0;
 }
 
