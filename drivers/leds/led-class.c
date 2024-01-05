@@ -31,7 +31,7 @@ static ssize_t brightness_show(struct device *dev,
 
 	/* no lock needed for this */
 	led_update_brightness(led_cdev);
-
+	printk(KERN_INFO "nle led update brightness");
 	return sprintf(buf, "%u\n", led_cdev->brightness);
 }
 
