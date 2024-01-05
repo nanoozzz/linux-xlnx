@@ -159,7 +159,7 @@ static int create_gpio_led(const struct gpio_led *template,
 		ret = devm_led_classdev_register(parent, &led_dat->cdev);
 	} else {
 		led_dat->cdev.name = devm_kasprintf(parent, GFP_KERNEL, "gpio-led-DS%d",
-			36+led_counter++);
+			37+led_counter++);
 		if (!led_dat->cdev.name)
 			return -ENOMEM;	
 		//init_data.fwnode = fwnode;
@@ -171,7 +171,7 @@ static int create_gpio_led(const struct gpio_led *template,
 	//if (ret == 0) {
 		// Set gpiod label to match the corresponding LED name.
 		gpiod_set_consumer_name(led_dat->gpiod, led_dat->cdev.name);
-		printk(KERN_INFO "nle led get name done");
+		//printk(KERN_INFO "nle led get name done");
 	//}
 
 	return ret;
