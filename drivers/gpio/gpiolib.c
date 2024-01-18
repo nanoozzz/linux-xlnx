@@ -173,6 +173,7 @@ EXPORT_SYMBOL_GPL(desc_to_gpio);
  */
 struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
 {
+	printk(KERN_INFO "nle got in gpiod_to_chip");
 	if (!desc || !desc->gdev)
 		return NULL;
 	return desc->gdev->chip;
@@ -182,6 +183,7 @@ EXPORT_SYMBOL_GPL(gpiod_to_chip);
 /* dynamic allocation of GPIOs, e.g. on a hotplugged device */
 static int gpiochip_find_base(int ngpio)
 {
+	printk(KERN_INFO "nle got in gpiochip_find_base");
 	struct gpio_device *gdev;
 	int base = ARCH_NR_GPIOS - ngpio;
 
@@ -212,6 +214,7 @@ static int gpiochip_find_base(int ngpio)
  */
 int gpiod_get_direction(struct gpio_desc *desc)
 {
+	printk(KERN_INFO "nle got in gpiod_get_direction");
 	struct gpio_chip *gc;
 	unsigned int offset;
 	int ret;
@@ -253,6 +256,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_direction);
  */
 static int gpiodev_add_to_list(struct gpio_device *gdev)
 {
+	printk(KERN_INFO "nle got in gpiodev_add_to_list");
 	struct gpio_device *prev, *next;
 
 	if (list_empty(&gpio_devices)) {
@@ -299,6 +303,7 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
  */
 static struct gpio_desc *gpio_name_to_desc(const char * const name)
 {
+	printk(KERN_INFO "nle got in gpio_name_to_desc");
 	struct gpio_device *gdev;
 	unsigned long flags;
 
@@ -333,6 +338,7 @@ static struct gpio_desc *gpio_name_to_desc(const char * const name)
  */
 static int gpiochip_set_desc_names(struct gpio_chip *gc)
 {
+	printk(KERN_INFO "nle got in gpiochip_set_desc_names");
 	struct gpio_device *gdev = gc->gpiodev;
 	int i;
 
@@ -493,6 +499,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
 
 static void gpiodevice_release(struct device *dev)
 {
+	printk(KERN_INFO "nle got in gpiodevice_release");
 	struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
 	unsigned long flags;
 
@@ -520,6 +527,7 @@ static void gpiodevice_release(struct device *dev)
 
 static int gpiochip_setup_dev(struct gpio_device *gdev)
 {
+	printk(KERN_INFO "nle got in gpiochip_setup_dev");
 	int ret;
 
 	ret = gcdev_register(gdev, gpio_devt);
@@ -566,6 +574,7 @@ static void gpiochip_machine_hog(struct gpio_chip *gc, struct gpiod_hog *hog)
 
 static void machine_gpiochip_add(struct gpio_chip *gc)
 {
+	printk(KERN_INFO "nle got in machine_gpiochip_add");
 	struct gpiod_hog *hog;
 
 	mutex_lock(&gpio_machine_hogs_mutex);
@@ -595,6 +604,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
 			       struct lock_class_key *lock_key,
 			       struct lock_class_key *request_key)
 {
+	printk(KERN_INFO "nle got in gpiochip_add_data_with_key");
 	struct fwnode_handle *fwnode = NULL;
 	struct gpio_device *gdev;
 	unsigned long flags;
@@ -859,6 +869,7 @@ EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
  */
 void *gpiochip_get_data(struct gpio_chip *gc)
 {
+	printk(KERN_INFO "nle got in gpiochip_get_data");
 	return gc->gpiodev->data;
 }
 EXPORT_SYMBOL_GPL(gpiochip_get_data);
@@ -871,6 +882,7 @@ EXPORT_SYMBOL_GPL(gpiochip_get_data);
  */
 void gpiochip_remove(struct gpio_chip *gc)
 {
+	printk(KERN_INFO "nle got in gpiochip_remove");
 	struct gpio_device *gdev = gc->gpiodev;
 	unsigned long	flags;
 	unsigned int	i;
@@ -928,6 +940,7 @@ struct gpio_chip *gpiochip_find(void *data,
 				int (*match)(struct gpio_chip *gc,
 					     void *data))
 {
+	printk(KERN_INFO "nle got in gpiochip_find");
 	struct gpio_device *gdev;
 	struct gpio_chip *gc = NULL;
 	unsigned long flags;
@@ -954,6 +967,7 @@ static int gpiochip_match_name(struct gpio_chip *gc, void *data)
 
 static struct gpio_chip *find_chip_by_name(const char *name)
 {
+	printk(KERN_INFO "nle got in find_chip_by_name");
 	return gpiochip_find((void *)name, gpiochip_match_name);
 }
 
