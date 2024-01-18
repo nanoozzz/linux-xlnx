@@ -60,6 +60,7 @@ static int modepin_gpio_get_value(struct gpio_chip *chip, unsigned int pin)
 static void modepin_gpio_set_value(struct gpio_chip *chip, unsigned int pin,
 				   int state)
 {
+	printk(KERN_INFO "nle got in modepin_gpio_set_value");
 	u32 bootpin_val = 0;
 	int ret;
 
@@ -88,6 +89,7 @@ static void modepin_gpio_set_value(struct gpio_chip *chip, unsigned int pin,
  */
 static int modepin_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
 {
+	printk(KERN_INFO "nle got in modepin_gpio_dir_in");
 	return 0;
 }
 
@@ -102,6 +104,7 @@ static int modepin_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
 static int modepin_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
 				int state)
 {
+	printk(KERN_INFO "nle got in modepin_gpio_dir_out");
 	return 0;
 }
 
