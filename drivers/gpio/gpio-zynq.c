@@ -162,6 +162,7 @@ static const struct irq_chip zynq_gpio_edge_irqchip;
  */
 static int zynq_gpio_is_zynq(struct zynq_gpio *gpio)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_is_zynq");
 	return !!(gpio->p_data->quirks & ZYNQ_GPIO_QUIRK_IS_ZYNQ);
 }
 
@@ -193,6 +194,7 @@ static inline void zynq_gpio_get_bank_pin(unsigned int pin_num,
 					  unsigned int *bank_pin_num,
 					  struct zynq_gpio *gpio)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_get_bank_pin");
 	int bank;
 
 	for (bank = 0; bank < gpio->p_data->max_bank; bank++) {
@@ -224,6 +226,7 @@ static inline void zynq_gpio_get_bank_pin(unsigned int pin_num,
  */
 static int zynq_gpio_get_value(struct gpio_chip *chip, unsigned int pin)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_get_value");
 	u32 data;
 	unsigned int bank_num, bank_pin_num;
 	struct zynq_gpio *gpio = gpiochip_get_data(chip);
@@ -268,6 +271,7 @@ static int zynq_gpio_get_value(struct gpio_chip *chip, unsigned int pin)
 static void zynq_gpio_set_value(struct gpio_chip *chip, unsigned int pin,
 				int state)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_set_value");
 	unsigned int reg_offset, bank_num, bank_pin_num;
 	struct zynq_gpio *gpio = gpiochip_get_data(chip);
 
@@ -304,6 +308,7 @@ static void zynq_gpio_set_value(struct gpio_chip *chip, unsigned int pin,
  */
 static int zynq_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_dir_in");
 	u32 reg;
 	unsigned int bank_num, bank_pin_num;
 	unsigned long flags;
@@ -344,6 +349,7 @@ static int zynq_gpio_dir_in(struct gpio_chip *chip, unsigned int pin)
 static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
 			     int state)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_dir_out");
 	u32 reg;
 	unsigned int bank_num, bank_pin_num;
 	unsigned long flags;
@@ -379,6 +385,7 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
  */
 static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_get_direction");
 	u32 reg;
 	unsigned int bank_num, bank_pin_num;
 	struct zynq_gpio *gpio = gpiochip_get_data(chip);
@@ -403,6 +410,7 @@ static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
  */
 static void zynq_gpio_irq_mask(struct irq_data *irq_data)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irq_mask");
 	unsigned int device_pin_num, bank_num, bank_pin_num;
 	const unsigned long offset = irqd_to_hwirq(irq_data);
 	struct gpio_chip *chip = irq_data_get_irq_chip_data(irq_data);
@@ -427,6 +435,7 @@ static void zynq_gpio_irq_mask(struct irq_data *irq_data)
  */
 static void zynq_gpio_irq_unmask(struct irq_data *irq_data)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irq_unmask");
 	unsigned int device_pin_num, bank_num, bank_pin_num;
 	const unsigned long offset = irqd_to_hwirq(irq_data);
 	struct gpio_chip *chip = irq_data_get_irq_chip_data(irq_data);
@@ -450,6 +459,7 @@ static void zynq_gpio_irq_unmask(struct irq_data *irq_data)
  */
 static void zynq_gpio_irq_ack(struct irq_data *irq_data)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irq_ack");
 	unsigned int device_pin_num, bank_num, bank_pin_num;
 	struct zynq_gpio *gpio =
 		gpiochip_get_data(irq_data_get_irq_chip_data(irq_data));
@@ -469,6 +479,7 @@ static void zynq_gpio_irq_ack(struct irq_data *irq_data)
  */
 static void zynq_gpio_irq_enable(struct irq_data *irq_data)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irq_enable");
 	/*
 	 * The Zynq GPIO controller does not disable interrupt detection when
 	 * the interrupt is masked and only disables the propagation of the
@@ -500,6 +511,7 @@ static void zynq_gpio_irq_enable(struct irq_data *irq_data)
  */
 static int zynq_gpio_set_irq_type(struct irq_data *irq_data, unsigned int type)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irq_type");
 	u32 int_type, int_pol, int_any;
 	unsigned int device_pin_num, bank_num, bank_pin_num;
 	struct zynq_gpio *gpio =
@@ -628,6 +640,7 @@ static void zynq_gpio_handle_bank_irq(struct zynq_gpio *gpio,
  */
 static void zynq_gpio_irqhandler(struct irq_desc *desc)
 {
+	printk(KERN_INFO "nle got in zynq_gpio_irqhandler");
 	u32 int_sts, int_enb;
 	unsigned int bank_num;
 	struct zynq_gpio *gpio =
