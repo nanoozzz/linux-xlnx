@@ -60,6 +60,7 @@ static DEFINE_MUTEX(sysfs_lock);
 static ssize_t direction_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in direction_show");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 	int value;
@@ -77,6 +78,7 @@ static ssize_t direction_show(struct device *dev,
 static ssize_t direction_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t size)
 {
+	printk(KERN_INFO "nle got in direction_store");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 	ssize_t			status;
@@ -101,6 +103,7 @@ static DEVICE_ATTR_RW(direction);
 static ssize_t value_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in value_show");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 	ssize_t			status;
@@ -120,6 +123,7 @@ static ssize_t value_show(struct device *dev,
 static ssize_t value_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t size)
 {
+	printk(KERN_INFO "nle got in value_store");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 	ssize_t status;
@@ -144,6 +148,7 @@ static DEVICE_ATTR_PREALLOC(value, S_IWUSR | S_IRUGO, value_show, value_store);
 
 static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
 {
+	printk(KERN_INFO "nle got in gpio_sysfs_irq");
 	struct gpiod_data *data = priv;
 
 	sysfs_notify_dirent(data->value_kn);
@@ -154,6 +159,7 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
 /* Caller holds gpiod-data mutex. */
 static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
 {
+	printk(KERN_INFO "nle got in gpio_sysfs_request_irq");
 	struct gpiod_data	*data = dev_get_drvdata(dev);
 	struct gpio_desc	*desc = data->desc;
 	unsigned long		irq_flags;
@@ -210,6 +216,7 @@ err_put_kn:
  */
 static void gpio_sysfs_free_irq(struct device *dev)
 {
+	printk(KERN_INFO "nle got in gpio_sysfs_free_irq");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 
@@ -229,6 +236,7 @@ static const char * const trigger_names[] = {
 static ssize_t edge_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in edge_show");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	int flags;
 
@@ -247,6 +255,7 @@ static ssize_t edge_show(struct device *dev,
 static ssize_t edge_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t size)
 {
+	printk(KERN_INFO "nle got in edge_store");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	ssize_t	status = size;
 	int flags;
@@ -281,6 +290,7 @@ static DEVICE_ATTR_RW(edge);
 /* Caller holds gpiod-data mutex. */
 static int gpio_sysfs_set_active_low(struct device *dev, int value)
 {
+	printk(KERN_INFO "nle got in gpio_sysfs_set_active_low");
 	struct gpiod_data	*data = dev_get_drvdata(dev);
 	struct gpio_desc	*desc = data->desc;
 	int			status = 0;
@@ -304,6 +314,7 @@ static int gpio_sysfs_set_active_low(struct device *dev, int value)
 static ssize_t active_low_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in active_low_show");
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
 	int value;
@@ -320,6 +331,7 @@ static ssize_t active_low_show(struct device *dev,
 static ssize_t active_low_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t size)
 {
+	printk(KERN_INFO "nle got in active_low_store");
 	struct gpiod_data	*data = dev_get_drvdata(dev);
 	ssize_t			status;
 	long			value;
@@ -341,6 +353,7 @@ static DEVICE_ATTR_RW(active_low);
 static umode_t gpio_is_visible(struct kobject *kobj, struct attribute *attr,
 			       int n)
 {
+	printk(KERN_INFO "nle got in gpio_is_visible");
 	struct device *dev = kobj_to_dev(kobj);
 	struct gpiod_data *data = dev_get_drvdata(dev);
 	struct gpio_desc *desc = data->desc;
@@ -388,6 +401,7 @@ static const struct attribute_group *gpio_groups[] = {
 static ssize_t base_show(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in base_show");
 	const struct gpio_chip	*chip = dev_get_drvdata(dev);
 
 	return sysfs_emit(buf, "%d\n", chip->base);
@@ -397,6 +411,7 @@ static DEVICE_ATTR_RO(base);
 static ssize_t label_show(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in label_show");
 	const struct gpio_chip	*chip = dev_get_drvdata(dev);
 
 	return sysfs_emit(buf, "%s\n", chip->label ?: "");
@@ -406,6 +421,7 @@ static DEVICE_ATTR_RO(label);
 static ssize_t ngpio_show(struct device *dev,
 			       struct device_attribute *attr, char *buf)
 {
+	printk(KERN_INFO "nle got in ngpio_show");
 	const struct gpio_chip	*chip = dev_get_drvdata(dev);
 
 	return sysfs_emit(buf, "%u\n", chip->ngpio);
@@ -430,6 +446,7 @@ static ssize_t export_store(struct class *class,
 				struct class_attribute *attr,
 				const char *buf, size_t len)
 {
+	printk(KERN_INFO "nle got in export_store");
 	long			gpio;
 	struct gpio_desc	*desc;
 	int			status;
@@ -482,6 +499,7 @@ static ssize_t unexport_store(struct class *class,
 				struct class_attribute *attr,
 				const char *buf, size_t len)
 {
+	printk(KERN_INFO "nle got in unexport_store");
 	long			gpio;
 	struct gpio_desc	*desc;
 	int			status;
@@ -546,6 +564,7 @@ static struct class gpio_class = {
  */
 int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
 {
+	printk(KERN_INFO "nle got in gpiod_export");
 	struct gpio_chip	*chip;
 	struct gpio_device	*gdev;
 	struct gpiod_data	*data;
@@ -677,6 +696,7 @@ EXPORT_SYMBOL_GPL(gpiod_export_link);
  */
 void gpiod_unexport(struct gpio_desc *desc)
 {
+	printk(KERN_INFO "nle got in gpiod_unexport");
 	struct gpiod_data *data;
 	struct device *dev;
 
@@ -720,6 +740,7 @@ EXPORT_SYMBOL_GPL(gpiod_unexport);
 
 int gpiochip_sysfs_register(struct gpio_device *gdev)
 {
+	printk(KERN_INFO "nle got in gpiochip_sysfs_register");
 	struct device	*dev;
 	struct device	*parent;
 	struct gpio_chip *chip = gdev->chip;
@@ -758,6 +779,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
 
 void gpiochip_sysfs_unregister(struct gpio_device *gdev)
 {
+	printk(KERN_INFO "nle got in gpiochip_sysfs_unregister");
 	struct gpio_desc *desc;
 	struct gpio_chip *chip = gdev->chip;
 
